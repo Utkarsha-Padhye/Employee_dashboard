@@ -6,7 +6,8 @@ import "../App.css";
 export const Home = () => {
     return (
         <div class="App-header">
-            <Image src={img} fluid />
+            <div class="bg"></div>
+            {/* <Image src={img} fluid /> */}
             <h3>home is working..</h3>
         </div>
     )

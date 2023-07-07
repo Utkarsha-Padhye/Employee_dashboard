@@ -45,7 +45,7 @@ export const  Filter = ()=> {
           <thead>
             <tr>
               <th>First Name</th>
-          
+              <th>Last Name</th>
               <th>Salary</th>
              
             </tr>
@@ -59,6 +59,7 @@ export const  Filter = ()=> {
               })
               .map((item, index) => (
                 <tr key={index}>
+                  <td>{item.name}</td>
                   <td>{item.name}</td>
                   <td>{item.email}</td>
                   {/* <td>{item.email}</td>
