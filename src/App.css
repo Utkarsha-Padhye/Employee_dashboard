@@ -26,19 +26,66 @@
 
 .bg {
   /* The image used */
-  background-image: url("./Images/empimg2.jpg"); 
-
+  background-image: url('./Images/citifilter.jpg');
   /* Full height */
   height: 100%;
-
   /* Center and scale the image nicely */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
+.filter-image {
+  background-image: url('./Images/citifilter.jpg');
+  background-size: cover;
+  background-position: center;
+  /* Add any other background properties you need */
+}
+
 .App-link {
   color: #61dafb;
+}
+
+thead{
+  text-align: center;
+}
+
+.theadr{
+  color:darkblue
+}
+
+.welcome-message {
+  position: absolute;
+  top: 10%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+.welcome-message h1 {
+  font-size: 34px;
+  font-weight: bold;
+  color:rgba(22, 2, 44, 0.998)
+}
+
+.app1 {
+  position: relative;
+}
+
+.background-image {
+  background-image: url('./Images/citifilter.jpg');
+  background-size: cover;
+  width: 100%;
+  height: 100vh;
+}
+
+.para 
+{
+  position: absolute;
+  top: 13%;
+  left: 3%;
+  color: rgba(255, 255, 255, 0.719);
 }
 
 @keyframes App-logo-spin {

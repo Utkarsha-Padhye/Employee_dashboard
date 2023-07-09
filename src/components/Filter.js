@@ -5,16 +5,20 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
+import "../App.css";  
+import { useTable } from 'react-table';
 //import { data } from './data.js';
 
 export const  Filter = ()=> {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState('');
  // const baseurl = 'http://localhost:8080/';
+ 
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get('api/employees', {
+      // const res = await axios.get('api/employees', {
+      const res = await axios.get('https://jsonplaceholder.typicode.com/users', {
         headers : {
           "Content-Type": "application/json",
         },
@@ -27,8 +31,25 @@ export const  Filter = ()=> {
     if (search.length === 0 || search.length > 2) fetchData();
   }, [search]);
 
+  // const Table = () => {
+  //   const {
+  //     getTableProps,
+  //     getTableBodyProps,
+  //     headerGroups,
+  //     rows,
+  //     prepareRow,
+  //   } = useTable({
+  //     columns,
+  //     data,
+  //   });
+
+    const handleCellClick = (value) => {
+      console.log('Cell clicked:', value);
+      // Add your custom logic here
+    };
+
   return (
-    <div>
+    <div class = 'filter-image'>
       <Container>
         <h1 className='text-center mt-4'>Employee Dashboard</h1>
         <Form>
@@ -41,10 +62,10 @@ export const  Filter = ()=> {
             />
           </InputGroup>
         </Form>
-        <Table striped bordered hover>
-          <thead>
+        <Table striped bordered hover variant="dark">
+          <thead >
             <tr>
-              <th>First Name</th>
+              <th onClick={() => handleCellClick()}>First Name</th>
               <th>Last Name</th>
               <th>Salary</th>
              
@@ -59,8 +80,8 @@ export const  Filter = ()=> {
               })
               .map((item, index) => (
                 <tr key={index}>
-                  <td>{item.name}</td>
-                  <td>{item.name}</td>
+                  <td onClick={() => handleCellClick(item.name)}>{item.name}</td>
+                  <td>{item.username}</td>
                   <td>{item.email}</td>
                   {/* <td>{item.email}</td>
                   <td>{item.salary}</td> */}
