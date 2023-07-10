@@ -1,95 +1,116 @@
-import React, { useEffect, useState } from 'react';
+import React, { Component } from 'react';
+import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from "axios";
 import "../App.css";  
-import { useTable } from 'react-table';
-//import { data } from './data.js';
+import { CSVLink } from 'react-csv';
+import Papa from 'papaparse';
 
-export const  Filter = ()=> {
-  const [data, setData] = useState([]);
-  const [search, setSearch] = useState('');
- // const baseurl = 'http://localhost:8080/';
- 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // const res = await axios.get('api/employees', {
-      const res = await axios.get('https://jsonplaceholder.typicode.com/users', {
-        headers : {
-          "Content-Type": "application/json",
-        },
-        method : 'GET',
+export class Filter extends Component {
+  state = {
+    tableData: [],
+    sortColumn: '',
+    sortDirection: 'asc',
+     searchQuery: ''
+  };
+
+  handleSearchChange = (e) => {
+    this.setState({ searchQuery: e.target.value });
+  };
+
+  
+
+  componentDidMount() {
+    this.fetchTableData();
+  }
+
+  fetchTableData = () => {
+    axios.get('https://jsonplaceholder.typicode.com/users')
+      .then(response => {
+        this.setState({ tableData: response.data });
       })
-      setData(res.data);
-      // const data1 =  JSON.stringify(data);
-      // console.log(data1);
-    };
-    if (search.length === 0 || search.length > 2) fetchData();
-  }, [search]);
+      .catch(error => {
+        console.error('Error fetching table data:', error);
+      });
+  };
 
-  // const Table = () => {
-  //   const {
-  //     getTableProps,
-  //     getTableBodyProps,
-  //     headerGroups,
-  //     rows,
-  //     prepareRow,
-  //   } = useTable({
-  //     columns,
-  //     data,
-  //   });
+  sortTable = (column) => {
+    const { tableData, sortColumn, sortDirection } = this.state;
 
-    const handleCellClick = (value) => {
-      console.log('Cell clicked:', value);
-      // Add your custom logic here
-    };
+    // Determine the new sort direction
+    let newSortDirection = 'asc';
+    if (sortColumn === column) {
+      newSortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    }
 
-  return (
-    <div class = 'filter-image'>
+    // Sort the table data based on the column and direction
+    const sortedData = [...tableData].sort((a, b) => {
+      if (a[column] < b[column]) {
+        return newSortDirection === 'asc' ? -1 : 1;
+      }
+      if (a[column] > b[column]) {
+        return newSortDirection === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+
+    this.setState({
+      tableData: sortedData,
+      sortColumn: column,
+      sortDirection: newSortDirection
+    });
+  };
+
+  render() {
+    const { tableData, sortColumn, sortDirection, searchQuery } = this.state;
+
+    const filteredData = tableData.filter(row => {
+      const values = Object.values(row).join(' ').toLowerCase();
+      return values.includes(searchQuery.toLowerCase());
+    });
+
+    const csvData = Papa.unparse(filteredData);
+
+
+    return (
+      <div class = 'filter-image'>
+        <div class = 'centre1'>
+        <input type="text" value={searchQuery} onChange={this.handleSearchChange} placeholder="Search" />
+        </div>
       <Container>
-        <h1 className='text-center mt-4'>Employee Dashboard</h1>
-        <Form>
-          <InputGroup className='my-3'>
-
-            {/* onChange for search */}
-            <Form.Control
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder='Search Employee'
-            />
-          </InputGroup>
-        </Form>
-        <Table striped bordered hover variant="dark">
-          <thead >
-            <tr>
-              <th onClick={() => handleCellClick()}>First Name</th>
-              <th>Last Name</th>
-              <th>Salary</th>
-             
+      <div>
+      <CSVLink className="downloadbtn" data={csvData} filename="filteredData.csv">Export to CSV</CSVLink>
+      </div>
+      <Table striped bordered hover variant="dark">
+        <thead>
+          <tr>
+            <th onClick={() => this.sortTable('name')}>
+              Name {sortColumn === 'name' && <span>{sortDirection}</span>}
+            </th>
+            <th onClick={() => this.sortTable('username')}>
+              User {sortColumn === 'username' && <span>{sortDirection}</span>}
+            </th>
+            <th>Email</th>
+            {/* Add more column headers as needed */}
+          </tr>
+        </thead>
+        <tbody>
+          {filteredData.map((row, index) => (
+            <tr key={index}>
+              <td>{row.name}</td>
+              <td>{row.username}</td>
+              <td>{row.email}</td>
+              {/* Render more table cells based on your data */}
             </tr>
-          </thead>
-          <tbody>
-            {data
-              .filter((item) => {
-                return search.toLowerCase() === ''
-                  ? item
-                  : item.name.toLowerCase().includes(search);
-              })
-              .map((item, index) => (
-                <tr key={index}>
-                  <td onClick={() => handleCellClick(item.name)}>{item.name}</td>
-                  <td>{item.username}</td>
-                  <td>{item.email}</td>
-                  {/* <td>{item.email}</td>
-                  <td>{item.salary}</td> */}
-                </tr>
-              ))}
-          </tbody>
-        </Table>
+          ))}
+        </tbody>
+      </Table>
       </Container>
-    </div>
-  );
+      </div>
+    );
+  }
 }

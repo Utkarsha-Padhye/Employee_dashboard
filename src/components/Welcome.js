@@ -5,7 +5,7 @@ const Welcome = () => {
   return (
     <>
     <div className="welcome-message">
-      <h1>Welcome to Emplyee Dashboard!</h1>
+      <h1>Welcome to Employee Dashboard!</h1>
     </div>
     <div className = "para">
       <p>

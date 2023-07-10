@@ -22,8 +22,10 @@ function BasicExample() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav variant="pills" defaultActiveKey="/Home">
-            <Nav.Link as={Link} to="/Home">Home</Nav.Link>
+            <Nav fill variant="tabs" defaultActiveKey="/Home">
+            <Nav.Item>
+            <Nav.Link  as={Link} to="/Home" >Home</Nav.Link>
+            </Nav.Item>
             <Nav.Link as={Link} to="/Filter">Filter</Nav.Link>
             </Nav>
             <NavDropdown title="Sort" id="basic-nav-dropdown">

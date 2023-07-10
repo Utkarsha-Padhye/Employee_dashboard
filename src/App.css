@@ -88,6 +88,28 @@ thead{
   color: rgba(255, 255, 255, 0.719);
 }
 
+.centre1{
+  display: grid;
+    justify-content: center;  /* Align in the center */
+    align-items: start;       /* Set vertical alignment */
+
+    height: 80px;
+    padding: 20px;
+  
+}
+
+.downloadbtn {
+  background: rgb(7, 50, 241);
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+  margin: unset;
+  position: absolute;
+  top: 100px;
+  right:100px;
+
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
