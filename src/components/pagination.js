@@ -18,13 +18,12 @@ export class Pagination extends Component {
 
   fetchData = () => {
     const { currentPage, limit } = this.state;
-    
     axios
       .get(`https://api.instantwebtools.net/v1/passenger?page=${currentPage}&size=${limit}`)
       .then(response => {
-        const { totalPassengers, totalPages, data } = response.data.results;
+        const { totalPassengers, totalPages, data } = response.data;
         this.setState({
-        totalPassengers,
+          totalPassengers,
         totalPages,
         data,
         });
@@ -76,5 +75,3 @@ export class Pagination extends Component {
     );
   }
 }
-
-
