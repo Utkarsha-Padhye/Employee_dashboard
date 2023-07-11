@@ -12,6 +12,7 @@ import {
 import { Home } from './components/Home';
 import { Filter } from './components/Filter';
 import { Sortbyname } from './components/Sortbyname';
+import { Pagination } from './components/Pagination';
 
 function BasicExample() {
   return (
@@ -30,8 +31,8 @@ function BasicExample() {
             </Nav>
             <NavDropdown title="Sort" id="basic-nav-dropdown">
               <NavDropdown.Item as={Link} to="/sortbyname">Sort By Name</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
+              <NavDropdown.Item href="/pagination">
+                Pagination
               </NavDropdown.Item>
               <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
               <NavDropdown.Divider />
@@ -48,6 +49,7 @@ function BasicExample() {
         <Route path="/Home" element={<Home/>}/>
         <Route path="/filter" element={<Filter/>}/>
         <Route path="/sortbyname" element={<Sortbyname/>}/>
+        <Route path="/pagination" element={<Pagination/>}/>
         <Route path="/" element={<Home/>}/>
       </Routes>
     </div>

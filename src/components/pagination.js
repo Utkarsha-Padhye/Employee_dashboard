@@ -1,61 +1,80 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-class Table extends Component {
-  state = {
-    tableData: [],
-    currentPage: 1,
-    totalPages: 0
-  };
-
-  componentDidMount() {
-    this.fetchTableData();
+export class Pagination extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      currentPage: 1,
+      totalPages: 1,
+      limit: 10,
+    };
   }
 
-  fetchTableData = (page = 1) => {
-    axios.get(`/api/tableData?page=${page}`)
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData = () => {
+    const { currentPage, limit } = this.state;
+    
+    axios
+      .get(`https://api.instantwebtools.net/v1/passenger?page=${currentPage}&size=${limit}`)
       .then(response => {
+        const { totalPassengers, totalPages, data } = response.data.results;
         this.setState({
-          tableData: response.data.results,
-          currentPage: response.data.currentPage,
-          totalPages: response.data.totalPages
+        totalPassengers,
+        totalPages,
+        data,
         });
       })
       .catch(error => {
-        console.error('Error fetching table data:', error);
+        console.error('Error fetching data:', error);
       });
   };
 
-  handlePageChange = (page) => {
-    this.fetchTableData(page);
+  goToPage = page => {
+    this.setState({ currentPage: page }, () => {
+      this.fetchData();
+    });
   };
 
   render() {
-    const { tableData, currentPage, totalPages } = this.state;
+    const { data, currentPage, totalPages } = this.state;
 
     return (
       <div>
-        <table>
-          <thead>
-            {/* Table headers */}
-          </thead>
-          <tbody>
-            {tableData.map((row, index) => (
-              <tr key={index}>
-                {/* Table cells */}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {/* Render data */}
+        <ul>
+          {data.map(item => (
+            <li key={item.id}>{item.name}</li>
+          ))}
+        </ul>
 
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={this.handlePageChange}
-        />
+        {/* Render pagination */}
+        <div>
+          {currentPage > 1 && (
+            <button onClick={() => this.goToPage(currentPage - 1)}>Previous</button>
+          )}
+
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
+            <button
+              key={page}
+              onClick={() => this.goToPage(page)}
+              disabled={page === currentPage}
+            >
+              {page}
+            </button>
+          ))}
+
+          {currentPage < totalPages && (
+            <button onClick={() => this.goToPage(currentPage + 1)}>Next</button>
+          )}
+        </div>
       </div>
     );
   }
 }
 
-export default Table;
+
